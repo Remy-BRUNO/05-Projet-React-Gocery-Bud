@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import Form from "./Form"
 import Items from "./Items"
+import { nanoid } from "nanoid"
 function App() {
   const [items, setItems] = useState([])
 
@@ -10,10 +11,12 @@ function App() {
     localStorage.setItem("articles", JSON.stringify(article))
   }
 
-  const addItem = (e) => {
-    const newItem = [...items, e]
-    setItems(newItem)
-    setLocalStorage(newItem)
+  const addItem = (item) => {
+    const newItem = { name: item, id: nanoid(10), completed: false }
+    if (!item) return notifyError()
+    const newItems = [...items, newItem]
+    setItems(newItems)
+    setLocalStorage(newItems)
     notifySucces()
   }
 
@@ -92,7 +95,7 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      <Form notifyError={notifyError} addItem={addItem} />
+      <Form addItem={addItem} />
       <Items removeItem={removeItem} editItem={editItem} items={items} />
     </section>
   )

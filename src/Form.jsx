@@ -1,15 +1,10 @@
 import { useState } from "react"
-import { nanoid } from "nanoid"
 
-const Form = ({ notifyError, addItem }) => {
+const Form = ({ addItem }) => {
   const [item, setItem] = useState("")
-
   const handleSubmit = (e) => {
     e.preventDefault()
-    const newItem = { name: item, id: nanoid(10), completed: false }
-    if (!item) return notifyError()
-
-    addItem(newItem)
+    addItem(item)
     setItem("")
   }
   return (
