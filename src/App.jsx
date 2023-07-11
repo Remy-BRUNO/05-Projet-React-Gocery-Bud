@@ -13,74 +13,33 @@ function App() {
 
   const addItem = (item) => {
     const newItem = { name: item, id: nanoid(10), completed: false }
-    if (!item) return notifyError()
+    if (!item) return toast.error("😫  Veuillez remplir le champ")
     const newItems = [...items, newItem]
     setItems(newItems)
     setLocalStorage(newItems)
-    notifySucces()
+    toast.success("🛒  Article ajouté")
   }
 
   const removeItem = (id) => {
     const newItems = items.filter((item) => item.id !== id)
     setItems(newItems)
     setLocalStorage(newItems)
-    notifyRemove()
+    toast.success("🚮  Article supprimer!")
   }
+
+  const editItem = (id, completed) => {
+    items.map((item) => {
+      if (item.id === id) item.completed = completed
+    })
+    setLocalStorage(items)
+    setItems(JSON.parse(localStorage.getItem("articles")))
+  }
+
   useEffect(() => {
     JSON.parse(localStorage.getItem("articles"))
       ? setItems(JSON.parse(localStorage.getItem("articles")))
       : setItems([])
   }, [])
-
-  const editItem = (id) => {
-    const checkedItems = [...items]
-    checkedItems.forEach((item) => {
-      if (item.id === id) {
-        item.completed ? (item.completed = false) : (item.completed = true)
-      }
-    })
-
-    setLocalStorage(checkedItems)
-  }
-
-  // toast
-  const notifySucces = () => {
-    toast.success("🛒  Article ajouté", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    })
-  }
-  const notifyError = () => {
-    toast.error("😫  Veuillez remplir le champ", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    })
-  }
-  const notifyRemove = () => {
-    toast.success("🚮  Article supprimer!", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    })
-  }
-
   return (
     <section className="section-center">
       <ToastContainer
@@ -88,11 +47,9 @@ function App() {
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick
+        closeOnClick={true}
         rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
+        draggable={true}
         theme="light"
       />
       <Form addItem={addItem} />
